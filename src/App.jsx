@@ -18,7 +18,7 @@ const App = () => {
         productname={e.title}
         key={id}
       >
-        <ButtonComponent color={styles.submit} text="Edit" />
+        <ButtonComponent color={styles.submit} text="Edit"  />
         <ButtonComponent color={styles.delete} text="Destroy" />
       </ProductCard>
     );

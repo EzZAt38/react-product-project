@@ -1,5 +1,8 @@
-import { ReactNode } from "react";
-
+import { ButtonHTMLAttributes, ReactNode } from "react";
+export interface IBtn extends ButtonHTMLAttributes<HTMLButtonElement> {
+  color: string;
+  text: string;
+}
 export interface Icard {
   productImage: string;
   productname: string;

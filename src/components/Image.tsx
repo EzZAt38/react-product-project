@@ -8,6 +8,7 @@ const Image = ({ imageURL, alt, className }: Iprops) => {
   return (
     <div>
       {/* good job 🧡🧡❤❤ */}
+
       <img src={imageURL} alt={alt} className={className} />
     </div>
   );
