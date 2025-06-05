@@ -2,24 +2,22 @@ import ProductCard from "./components/ProductCard";
 import { productList } from "./data/index";
 import { styles } from "./interfaces/interface";
 import ButtonComponent from "./ui/ButtonComponent";
-const App = () => {
-  const productItem = productList.map((e, id) => {
-    return (
+
+const App = () => (
+  <div className={`${styles.responsiveScreen} container mx-auto`}>
+    {productList.map(({ description, price, imageURL, title }, id) => (
       <ProductCard
-        description={e.description}
-        price={e.price}
-        productImage={e.imageURL}
-        productname={e.title}
         key={id}
+        description={description}
+        price={price}
+        productImage={imageURL}
+        productname={title}
       >
         <ButtonComponent color={styles.submit} text="Edit" />
         <ButtonComponent color={styles.delete} text="Destroy" />
       </ProductCard>
-    );
-  });
-  return (
-    <div className={`${styles.responsiveScreen} container mx-auto`}>{productItem}</div>
-  );
-};
+    ))}
+  </div>
+);
 
 export default App;

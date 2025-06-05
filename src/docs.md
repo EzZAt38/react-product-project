@@ -1,3 +1,7 @@
+Here’s a sample documentation for your React Product Project:
+
+---
+
 # React Product Project
 
 ## Overview
@@ -28,18 +32,15 @@ react Produuct Project/
 
 ## Main Components
 
-### 1. `App.jsx`
-
+### 1. App.jsx
 - **Purpose:** Main entry point. Renders the product list using `ProductCard`.
 - **Logic:** Maps over `productList` and passes product data as props to `ProductCard`. Includes "Edit" and "Destroy" buttons for each product.
 
 ### 2. `ProductCard.jsx`
-
 - **Purpose:** Displays individual product details.
 - **Props:** Receives `description`, `price`, `productImage`, `productname`, and children (buttons).
 
 ### 3. `ButtonComponent.jsx`
-
 - **Purpose:** Reusable button component.
 - **Props:** Accepts `color` and `text` for customization.
 
@@ -48,12 +49,10 @@ react Produuct Project/
 ## Data & Interfaces
 
 ### 1. `productList` (in `data/index.js`)
-
 - **Type:** Array of product objects.
 - **Fields:** `description`, `price`, `imageURL`, `title`.
 
 ### 2. `styles` (in `interfaces/interface.js`)
-
 - **Purpose:** Centralized style/class name definitions for consistency.
 
 ---
@@ -80,7 +79,7 @@ react Produuct Project/
 - **Styling:**  
   Update class names in `styles` (in `src/interfaces/interface.js`) or add new styles as needed.
 - **Button Actions:**  
-  Implement logic for "Edit" and "Destroy" buttons in `ProductCard` or lift state up to `App.jsx`.
+  Implement logic for "Edit" and "Destroy" buttons in `ProductCard` or lift state up to App.jsx.
 
 ---
 
