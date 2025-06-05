@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useState } from "react";
 import ButtonComponent from "../ui/ButtonComponent";
-import { Icard, styles } from "../interfaces/interface";
+import { Icard, styles, textLenther } from "../interfaces/interface";
 import Image from "./Image";
 const ProductCard = ({
   productImage,
@@ -9,6 +9,7 @@ const ProductCard = ({
   productname,
   children,
 }: Icard) => {
+  const [textState, setTextState] = useState(true);
   return (
     <div className={styles.icardparents}>
       {/* the header side */}
@@ -25,7 +26,11 @@ const ProductCard = ({
       {/* the header side */}
       <div className="body">
         <div className="descriptionSide max-w-[80%]">
-          <p className="p-1">{description}</p>
+          <p className="p-1" onClick={() => setTextState(!textState)}>
+            {textState == true
+              ? textLenther(description)
+              : textLenther(description, description.length)}
+          </p>
           <div className="colorSide">
             <ul className={styles.ballsParent}>
               <li className={`bg-red-600 ${styles.majorBallStyle}`}></li>

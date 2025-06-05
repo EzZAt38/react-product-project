@@ -2,6 +2,7 @@ import { ButtonHTMLAttributes, ReactNode } from "react";
 export interface IBtn extends ButtonHTMLAttributes<HTMLButtonElement> {
   color: string;
   text: string;
+  width?: "w-full" | "w-fit";
 }
 export interface Icard {
   productImage: string;
@@ -22,3 +23,14 @@ export const styles = {
   majorBallStyle: "rounded-full w-3 h-3",
   categoryAndPrice: "flex items-center justify-between",
 };
+/**
+ *
+ * @param {string} txt  => this is the text param , it will have been sliced
+ * @param {number} max  => this the max number of chars in the text
+ * @returns  => it returns a new text the text is sliced of the text param
+ */
+export function textLenther(txt: string, max: number = 100) {
+  if (txt.length >= max) {
+    return `${txt.slice(0, max)} ...`;
+  } else return txt;
+}

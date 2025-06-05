@@ -4,15 +4,9 @@ import { styles } from "./interfaces/interface";
 import ButtonComponent from "./ui/ButtonComponent";
 const App = () => {
   const productItem = productList.map((e, id) => {
-    let text = "";
-    if (e.description.length == 150) {
-      text = e.description;
-    } else {
-      text = `${e.description.slice(0, 150)}`;
-    }
     return (
       <ProductCard
-        description={text}
+        description={e.description}
         price={e.price}
         productImage={e.imageURL}
         productname={e.title}
@@ -21,11 +15,8 @@ const App = () => {
         <ButtonComponent
           color={styles.submit}
           text="Edit"
-          onClick={() => {
-            alert("fuck you");
-          }}
         />
-        <ButtonComponent color={styles.delete} text="Destroy" />
+        <ButtonComponent color={styles.delete} text="Destroy"  />
       </ProductCard>
     );
   });
