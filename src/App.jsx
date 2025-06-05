@@ -12,15 +12,14 @@ const App = () => {
         productname={e.title}
         key={id}
       >
-        <ButtonComponent
-          color={styles.submit}
-          text="Edit"
-        />
-        <ButtonComponent color={styles.delete} text="Destroy"  />
+        <ButtonComponent color={styles.submit} text="Edit" />
+        <ButtonComponent color={styles.delete} text="Destroy" />
       </ProductCard>
     );
   });
-  return <div className={styles.responsiveScreen}>{productItem}</div>;
+  return (
+    <div className={`${styles.responsiveScreen} container mx-auto`}>{productItem}</div>
+  );
 };
 
 export default App;
