@@ -1,5 +1,5 @@
 import ProductCard from "./components/ProductCard";
-import { productList } from "../../product materals/src/data/index";
+import { productList } from "./data/index";
 import { styles } from "./interfaces/interface";
 import ButtonComponent from "./ui/ButtonComponent";
 const App = () => {
@@ -18,7 +18,13 @@ const App = () => {
         productname={e.title}
         key={id}
       >
-        <ButtonComponent color={styles.submit} text="Edit"  />
+        <ButtonComponent
+          color={styles.submit}
+          text="Edit"
+          onClick={() => {
+            alert("fuck you");
+          }}
+        />
         <ButtonComponent color={styles.delete} text="Destroy" />
       </ProductCard>
     );
