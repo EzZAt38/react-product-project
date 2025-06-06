@@ -34,3 +34,9 @@ export function textLenther(txt: string, max: number = 100) {
     return `${txt.slice(0, max)} ...`;
   } else return txt;
 }
+export interface MyModalProps {
+  isOpen: boolean;
+  closeModal: () => void;
+  title?: string;
+  children: ReactNode;
+}

@@ -77,8 +77,7 @@ react Produuct Project/
 
 - **Add/Edit Products:**  
   Modify `productList` in `src/data/index.js`.
-- **Styling:**  
-  Update class names in `styles` (in `src/interfaces/interface.js`) or add new styles as needed.
+- **Styling:**  tyles` (in `src/interfaces/interface.js`) or add new styles as needed.
 - **Button Actions:**  
   Implement logic for "Edit" and "Destroy" buttons in `ProductCard` or lift state up to `App.jsx`.
 
