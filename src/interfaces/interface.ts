@@ -1,3 +1,4 @@
+import{ InputHTMLAttributes } from "react";
 import { ButtonHTMLAttributes, ReactNode } from "react";
 export interface IBtn extends ButtonHTMLAttributes<HTMLButtonElement> {
   color: string;
@@ -39,4 +40,11 @@ export interface MyModalProps {
   closeModal: () => void;
   title?: string;
   children: ReactNode;
+}
+// Define the interface for the Input component props
+export interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
+  id: string;
+  label: string;
+  placeholder?: string;
+  inputType?: "text" | "email" | "password" | "number";
 }

@@ -1,6 +1,7 @@
 import { Dialog, Transition } from "@headlessui/react";
 import { Fragment, ReactNode, useState } from "react";
 import { MyModalProps } from "../interfaces/interface";
+import Input from "./Input";
 export default function MyModal({
   isOpen,
   closeModal,
@@ -44,7 +45,24 @@ export default function MyModal({
                     </Dialog.Title>
                   )}
                   {/* inputs feild */}
-                  
+                  <div className="mt-2 flex flex-col space-y-4">
+                    <Input
+                      id="product name"
+                      label="Product name :"
+                      placeholder="write your product name here"
+                    />
+                    <Input
+                      id="description"
+                      label="description :"
+                      placeholder="write your description here"
+                    />
+                    <Input
+                      id="price"
+                      label="price :"
+                      inputType="number"
+                      placeholder="write your price  here"
+                    />
+                  </div>
 
                   <div className="mt-4 flex space-x-1">{children}</div>
                 </Dialog.Panel>

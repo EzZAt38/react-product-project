@@ -6,7 +6,7 @@ import MyModal from "./ui/DailogModle";
 import { useState } from "react";
 
 const App = () => {
-  const [isOpen, setIsOpen] = useState(true);
+  const [isOpen, setIsOpen] = useState(false);
 
   const closeModal = () => setIsOpen(false);
   const openModal = () => setIsOpen(true);
@@ -26,20 +26,19 @@ const App = () => {
             text="Edit"
             onClick={openModal}
           />
-          <ButtonComponent
-            color={styles.delete}
-            text="Destroy"
-          />
+          <ButtonComponent color={styles.delete} text="Destroy" />
         </ProductCard>
       ))}
 
-      <MyModal closeModal={closeModal} isOpen={isOpen}>
+      <MyModal closeModal={closeModal} isOpen={isOpen} title="Edit Product">
         <ButtonComponent
           color={styles.submit}
           text="submit"
           width="w-full"
           onClick={closeModal}
+
         />
+        <ButtonComponent color={styles.delete} text="Delete" onClick={closeModal} />
       </MyModal>
     </div>
   );
