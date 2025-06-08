@@ -1,6 +1,6 @@
 import { Dialog, Transition } from "@headlessui/react";
-import { Fragment, useState } from "react";
-import { Icard, MyModalProps } from "../interfaces/interface";
+import { Fragment} from "react";
+import {  MyModalProps } from "../interfaces/interface";
 import Input from "./Input";
 
 export default function MyModal({
@@ -9,13 +9,6 @@ export default function MyModal({
   title,
   children,
 }: MyModalProps) {
-  const [product, setProduct] = useState<Icard>({
-    productImage: "",
-    productname: "",
-    description: "",
-    price: "",
-  });
-
   return (
     <Transition appear show={isOpen} as={Fragment}>
       <Dialog as="div" className="relative z-10" onClose={closeModal}>
@@ -55,48 +48,8 @@ export default function MyModal({
                 )}
 
                 {/* Input Fields */}
-                <div className="mt-2 flex flex-col space-y-4">
-                  <Input
-                    id="product-name"
-                    label="Product name:"
-                    placeholder="Write your product name here"
-                    value={product.productname}
-                    onChange={e =>
-                      setProduct({ ...product, productname: e.target.value })
-                    }
-                  />
-                  <Input
-                    id="product-image"
-                    label="Product Image URL:"
-                    placeholder="Paste your product image URL here"
-                    value={product.productImage}
-                    onChange={e =>
-                      setProduct({ ...product, productImage: e.target.value })
-                    }/>
-                  <Input
-                    id="description"
-                    label="Description:"
-                    placeholder="Write your description here"
-                    value={product.description}
-                    onChange={e =>
-                      setProduct({ ...product, description: e.target.value })
-                    }
-                  />
-                  <Input
-                    id="price"
-                    label="Price:"
-                    placeholder="Write your price here"
-                    value={product.price}
-                    onChange={e =>
-                      setProduct({ ...product, price: e.target.value })
-                    }
-                  />
-                </div>
+              { children }
 
-                {/* Modal Actions */}
-                <div className="mt-4 flex space-x-1">
-                  {children}
-                </div>
               </Dialog.Panel>
             </Transition.Child>
           </div>
