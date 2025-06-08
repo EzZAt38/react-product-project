@@ -1,46 +1,57 @@
+import { useState } from "react";
 import ProductCard from "./components/ProductCard";
 import { productList } from "./data/index";
 import { styles } from "./interfaces/interface";
 import ButtonComponent from "./ui/ButtonComponent";
 import MyModal from "./ui/DailogModle";
-import { useState } from "react";
 
 const App = () => {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const closeModal = () => setIsOpen(false);
-  const openModal = () => setIsOpen(true);
+  const openModal = () => setIsModalOpen(true);
+  const closeModal = () => setIsModalOpen(false);
 
   return (
-    <div className={`${styles.responsiveScreen} container mx-auto`}>
-      {productList.map((product, id) => (
-        <ProductCard
-          key={id}
-          description={product.description}
-          price={product.price}
-          productImage={product.imageURL}
-          productname={product.title}
+    <main className="container mx-auto pt-2">
+      <ButtonComponent color={styles.submit} text="Add" onClick={openModal}/>
+      
+      <div className={styles.responsiveScreen}>
+        {productList.map((product, idx) => (
+          <ProductCard
+            key={idx}
+            productname={product.title}
+            description={product.description}
+            price={product.price}
+            productImage={product.imageURL}
+          >
+            <ButtonComponent
+              color={styles.submit}
+              text="Edit"
+              onClick={openModal}
+            />
+            <ButtonComponent color={styles.delete} text="Destroy" />
+          </ProductCard>
+        ))}
+
+        <MyModal
+          isOpen={isModalOpen}
+          closeModal={closeModal}
+          title="Edit Product"
         >
           <ButtonComponent
             color={styles.submit}
-            text="Edit"
-            onClick={openModal}
+            text="submit"
+            width="w-full"
+            onClick={closeModal}
           />
-          <ButtonComponent color={styles.delete} text="Destroy" />
-        </ProductCard>
-      ))}
-
-      <MyModal closeModal={closeModal} isOpen={isOpen} title="Edit Product">
-        <ButtonComponent
-          color={styles.submit}
-          text="submit"
-          width="w-full"
-          onClick={closeModal}
-
-        />
-        <ButtonComponent color={styles.delete} text="Delete" onClick={closeModal} />
-      </MyModal>
-    </div>
+          <ButtonComponent
+            color={styles.delete}
+            text="Delete"
+            onClick={closeModal}
+          />
+        </MyModal>
+      </div>
+    </main>
   );
 };
 
