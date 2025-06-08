@@ -9,7 +9,7 @@ export interface Icard {
   productImage: string;
   productname: string;
   description: string;
-  price: number;
+  price: string;
   children?: ReactNode;
 }
 // this class is maked to make code more readable
