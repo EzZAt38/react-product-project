@@ -5,6 +5,7 @@ import { styles } from "./interfaces/interface";
 import ButtonComponent from "./ui/ButtonComponent";
 import MyModal from "./ui/DailogModle";
 import Input from "./ui/Input";
+import { Validation } from "./Validation";
 const App = () => {
   // State to control modal visibility
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -36,6 +37,7 @@ const onCancel = () => {
     e.preventDefault();
     // Here you would typically handle the form submission, e.g., send data to an API
     console.log("Product submitted:", product);
+   console.log(Validation(product));
     closeModal();
   };
   return (
