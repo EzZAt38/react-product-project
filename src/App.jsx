@@ -1,4 +1,4 @@
-import { useState} from "react";
+import { useState } from "react";
 import ProductCard from "./components/ProductCard";
 import { productList } from "./data/index";
 import { styles } from "./interfaces/interface";
@@ -6,40 +6,65 @@ import ButtonComponent from "./ui/ButtonComponent";
 import MyModal from "./ui/DailogModle";
 import Input from "./ui/Input";
 import { Validation } from "./Validation";
+import ErorrMessage from "./components/ErorrMessage";
+
+const initialProductState = {
+  productImage: "",
+  productname: "",
+  description: "",
+  price: "",
+};
+
+const initialErrorState = {
+  productImage: "",
+  productname: "",
+  description: "",
+  price: "",
+};
+
 const App = () => {
-  // State to control modal visibility
+  // Modal visibility state
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  // State to hold product data for the modal form
-  const [product, setProduct] = useState({
-    productImage: "",
-    productname: "",
-    description: "",
-    price: "",
-  });
+  // Product form state
+  const [product, setProduct] = useState(initialProductState);
+
+  // Error messages for form fields
+  const [errors, setErrors] = useState(initialErrorState);
 
   // Open modal handler
   const openModal = () => setIsModalOpen(true);
 
   // Close modal handler
   const closeModal = () => setIsModalOpen(false);
-const onCancel = () => {
-  setProduct({
-    productImage: "",
-    productname: "",
-    description: "",
-    price: "",
-  });
-  closeModal();
-}
-  // Submit handler for the form
-  const handlerSubmit = (e) => {
-    e.preventDefault();
-    // Here you would typically handle the form submission, e.g., send data to an API
-    console.log("Product submitted:", product);
-   console.log(Validation(product));
+
+  // Reset form and close modal
+  const onCancel = () => {
+    setProduct(initialProductState);
+    setErrors(initialErrorState);
     closeModal();
   };
+
+  // Form submit handler
+  const handlerSubmit = (e) => {
+    e.preventDefault();
+    const validationResult = Validation(product);
+    setErrors(validationResult);
+
+    // If all error fields are empty, close modal (form is valid)
+    const hasErrors = Object.values(validationResult).some((msg) => msg !== "");
+    if (!hasErrors) {
+      // Here you would typically handle the form submission, e.g., send data to an API
+      onCancel();
+    }
+  };
+
+  // Helper for input change
+  const handleInputChange = (field) => (e) => {
+    setProduct({ ...product, [field]: e.target.value });
+    setErrors({ ...errors, [field]: "" }); // Clear error on change
+  };
+
   return (
     <main className="container mx-auto pt-2">
       {/* Add Product Button */}
@@ -47,13 +72,13 @@ const onCancel = () => {
 
       {/* Product List */}
       <div className={styles.responsiveScreen}>
-        {productList.map((product, idx) => (
+        {productList.map((prod, idx) => (
           <ProductCard
             key={idx}
-            productname={product.title}
-            description={product.description}
-            price={product.price}
-            productImage={product.imageURL}
+            productname={prod.title}
+            description={prod.description}
+            price={prod.price}
+            productImage={prod.imageURL}
           >
             {/* Edit and Destroy Buttons for each product */}
             <ButtonComponent
@@ -74,44 +99,49 @@ const onCancel = () => {
       >
         <form className="mt-2 flex flex-col space-y-4" onSubmit={handlerSubmit}>
           {/* Product Name Input */}
-          <Input
-            id="product-name"
-            label="Product name:"
-            placeholder="Write your product name here"
-            value={product.productname}
-            onChange={(e) =>
-              setProduct({ ...product, productname: e.target.value })
-            }
-          />
+          <div>
+            <Input
+              id="product-name"
+              label="Product name:"
+              placeholder="Write your product name here"
+              value={product.productname}
+              onChange={handleInputChange("productname")}
+            />
+            <ErorrMessage message={errors.productname} />
+          </div>
           {/* Product Image URL Input */}
-          <Input
-            id="product-image"
-            label="Product Image URL:"
-            placeholder="Paste your product image URL here"
-            value={product.productImage}
-            onChange={(e) =>
-              setProduct({ ...product, productImage: e.target.value })
-            }
-          />
+          <div>
+            <Input
+              id="product-image"
+              label="Product Image URL:"
+              placeholder="Paste your product image URL here"
+              value={product.productImage}
+              onChange={handleInputChange("productImage")}
+            />
+            <ErorrMessage message={errors.productImage} />
+          </div>
           {/* Description Input */}
-          <Input
-            id="description"
-            label="Description:"
-            placeholder="Write your description here"
-            value={product.description}
-            onChange={(e) =>
-              setProduct({ ...product, description: e.target.value })
-            }
-          />
+          <div>
+            <Input
+              id="description"
+              label="Description:"
+              placeholder="Write your description here"
+              value={product.description}
+              onChange={handleInputChange("description")}
+            />
+            <ErorrMessage message={errors.description} />
+          </div>
           {/* Price Input */}
-          <Input
-            id="price"
-            label="Price:"
-            placeholder="Write your price here"
-            value={product.price}
-            onChange={(e) => setProduct({ ...product, price: e.target.value })}
-          />
-
+          <div>
+            <Input
+              id="price"
+              label="Price:"
+              placeholder="Write your price here"
+              value={product.price}
+              onChange={handleInputChange("price")}
+            />
+            <ErorrMessage message={errors.price} />
+          </div>
           {/* Modal Action Buttons */}
           <div className="mt-4 flex space-x-1">
             <ButtonComponent
