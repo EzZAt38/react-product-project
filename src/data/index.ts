@@ -1,6 +1,6 @@
-import { ICategory, IFormInput, IProduct } from "../interfaces";
+// import { ICategory, IFormInput, IProduct } from "../interfaces";
 
-export const productList: IProduct[] = [
+export const productList = [
   {
     title: "Nike Shoes",
     description:
@@ -137,7 +137,7 @@ export const productList: IProduct[] = [
   },
 ];
 
-export const formInputsList: IFormInput[] = [
+export const formInputsList = [
   {
     id: "title",
     name: "title",
@@ -178,7 +178,7 @@ export const colors: string[] = [
   "#645CBB",
 ];
 
-export const categories: ICategory[] = [
+export const categories = [
   {
     name: "Nike",
     imageURL:

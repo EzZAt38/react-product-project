@@ -33,7 +33,7 @@ export const styles = {
   responsiveScreen: "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 p-3 ", // Responsive grid
   icardHeader: "header flex flex-col justify-around",            // Card header style
   ballsParent: "list-none flex max-w-[25%] justify-between my-2",// Decorative balls container
-  majorBallStyle: "rounded-full w-3 h-3",                       // Decorative ball style
+  majorBallStyle: "rounded-full w-5 h-5",                       // Decorative ball style
   categoryAndPrice: "flex items-center justify-between",         // Category and price row
 };
 
