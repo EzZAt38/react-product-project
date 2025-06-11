@@ -1,12 +1,13 @@
 import { useState } from "react";
 import ProductCard from "./components/ProductCard";
-import { productList } from "./data/index";
+import { colors, productList } from "./data/index";
 import { styles } from "./interfaces/interface";
 import ButtonComponent from "./ui/ButtonComponent";
 import MyModal from "./ui/DailogModle";
 import Input from "./ui/Input";
 import { Validation } from "./Validation";
 import ErorrMessage from "./components/ErorrMessage";
+import CircleColor from "./components/CircleColor";
 
 const initialProductState = {
   productImage: "",
@@ -28,10 +29,16 @@ const App = () => {
 
   // Product form state
   const [product, setProduct] = useState(initialProductState);
+  //temp colors state
+  const [tempColors, setTempColors] = useState([]);
 
   // Error messages for form fields
   const [errors, setErrors] = useState(initialErrorState);
-
+  //maping colors
+  const MapColors = colors.map((item) => (
+    <CircleColor key={item} color={item} onClick={() => setTempColors((prev) => [...prev, item])} />
+  ));
+  console.log(tempColors);
   // Open modal handler
   const openModal = () => setIsModalOpen(true);
 
@@ -54,6 +61,7 @@ const App = () => {
     // If all error fields are empty, close modal (form is valid)
     const hasErrors = Object.values(validationResult).some((msg) => msg !== "");
     if (!hasErrors) {
+      productList.push(product);
       // Here you would typically handle the form submission, e.g., send data to an API
       onCancel();
     }
@@ -142,6 +150,8 @@ const App = () => {
             />
             <ErorrMessage message={errors.price} />
           </div>
+          {/* circle side */}
+          <div className="flex items-center space-x-4 ">{MapColors}</div>
           {/* Modal Action Buttons */}
           <div className="mt-4 flex space-x-1">
             <ButtonComponent

@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import ButtonComponent from "../ui/ButtonComponent";
 import { Icard, styles, textLenther } from "../interfaces/interface";
 import Image from "./Image";
+import CircleColor from "./CircleColor";
 const ProductCard = ({
   productImage,
   description,
@@ -32,18 +33,14 @@ const ProductCard = ({
               : textLenther(description, description.length)}
           </p>
           <div className="colorSide">
-            <ul className={styles.ballsParent}>
-              <li className={`bg-red-600 ${styles.majorBallStyle}`}></li>
-              <li className={`bg-indigo-600 ${styles.majorBallStyle}`}></li>
-              <li className={` bg-blue-400 ${styles.majorBallStyle}`}></li>
-            </ul>
+            <CircleColor color={["#A31ACB", "#FF6E31", "#3C2A21"]} />
           </div>
         </div>
       </div>
       {/* this is the footer side */}
       {/* price and category side */}
       <div className={styles.categoryAndPrice}>
-        <p className="text-indigo-600 font-bold">${price}</p>
+        <p className="text-[#A31ACB]  font-bold">${price}</p>
         <Image
           imageURL={productImage}
           alt="product image"

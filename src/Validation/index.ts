@@ -1,7 +1,4 @@
-import { isBoxedPrimitive } from "node:util/types";
 import { Icard } from "../interfaces/interface";
-import { markAsUncloneable } from "node:worker_threads";
-
 /**
  * Validates a product object according to specified rules.
  *
