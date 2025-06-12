@@ -4,11 +4,12 @@ import { Icard, styles, textLenther } from "../interfaces/interface";
 import Image from "./Image";
 import CircleColor from "./CircleColor";
 const ProductCard = ({
-  productImage,
+  imageURL,
   description,
   price,
-  productname,
+  title,
   children,
+  color=[],
 }: Icard) => {
   const [textState, setTextState] = useState(true);
   return (
@@ -17,12 +18,12 @@ const ProductCard = ({
       <div className={styles.icardHeader}>
         <div className="imageSide">
           <Image
-            imageURL={productImage}
+            imageURL={imageURL}
             alt="product image"
             className="rounded-md"
           />
         </div>
-        <h1 className="text-lg p-0.7">{productname}</h1>
+        <h1 className="text-lg p-0.7">{title}</h1>
       </div>
       {/* the header side */}
       <div className="body">
@@ -32,8 +33,8 @@ const ProductCard = ({
               ? textLenther(description)
               : textLenther(description, description.length)}
           </p>
-          <div className="colorSide">
-            <CircleColor color={["#A31ACB", "#FF6E31", "#3C2A21"]} />
+          <div className="colorSide flex items-center space-x-1">
+            {color.map((colorItem, index) => (<CircleColor color={colorItem} key={index}/>))}
           </div>
         </div>
       </div>
@@ -42,7 +43,7 @@ const ProductCard = ({
       <div className={styles.categoryAndPrice}>
         <p className="text-[#A31ACB]  font-bold">${price}</p>
         <Image
-          imageURL={productImage}
+          imageURL={imageURL}
           alt="product image"
           className="rounded-full w-10 h-10"
         />

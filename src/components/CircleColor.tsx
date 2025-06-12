@@ -6,7 +6,7 @@ interface CircleColorProps extends LiHTMLAttributes<HTMLLIElement> {
 const CircleColor = ({ color, ...rest }: CircleColorProps) => {
   return (
     <li
-      className={`block ${styles.majorBallStyle}`}
+      className={`block ${styles.majorBallStyle} cursor-pointer`}
       style={{ backgroundColor: color }}
       {...rest}
     ></li>

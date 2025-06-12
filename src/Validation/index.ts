@@ -6,9 +6,9 @@ import { Icard } from "../interfaces/interface";
  * @returns {Icard} An error object with validation messages for each field.
  *
  * Validation rules:
- * - productname: Must be trimmed, between 10 and 80 characters.
+ * - title: Must be trimmed, between 10 and 80 characters.
  * - description: Must be trimmed, between 20 and 200 characters.
- * - productImage: Must be a non-empty, valid URL.
+ * - imageURL: Must be a non-empty, valid URL.
  * - price: Must be a non-empty, numeric value greater than 0.
  *
  * If a field is valid, its value in the returned error object will be an empty string.
@@ -18,17 +18,17 @@ export const Validation = (product: Icard): Icard => {
   const error: Icard = {
     description: "",
     price: "",
-    productImage: "",
-    productname: "",
+    imageURL: "",
+    title: "",
   };
-  const validURL = /^(https|http|ftp):\/\/[^ "]+$/.test(product.productImage);
+  const validURL = /^(https|http|ftp):\/\/[^ "]+$/.test(product.imageURL);
 
   if (
-    !product.productname.trim() ||
-    product.productname.length < 10 ||
-    product.productname.length > 80
+    !product.title.trim() ||
+    product.title.length < 10 ||
+    product.title.length > 80
   ) {
-    error.productname = "Product name must be between 10 and 80 characters.";
+    error.title = "Product name must be between 10 and 80 characters.";
   }
   if (
     !product.description.trim() ||
@@ -37,8 +37,8 @@ export const Validation = (product: Icard): Icard => {
   ) {
     error.description = "Description must be between 20 and 200 characters.";
   }
-  if (!product.productImage.trim() || !validURL) {
-    error.productImage = "Valid image is required.";
+  if (!product.imageURL.trim() || !validURL) {
+    error.imageURL = "Valid image is required.";
   }
   if (
     !product.price.trim() ||

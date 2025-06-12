@@ -16,11 +16,12 @@ export interface IBtn extends ButtonHTMLAttributes<HTMLButtonElement> {
  * Represents the shape of a product object and its children (usually action buttons).
  */
 export interface Icard {
-  productImage: string;   // URL for the product image
-  productname: string;    // Name/title of the product
+  imageURL: string;   // URL for the product image
+  title: string;    // Name/title of the product
   description: string;    // Product description
   price: string;          // Product price
   children?: ReactNode;   // Optional: React children (e.g., action buttons)
+  color?: string[]; // Optional: Array of colors for the product
 }
 
 /**
