@@ -1,6 +1,6 @@
 import { useState } from "react";
 import ProductCard from "./components/ProductCard";
-import { colors, productList } from "./data/index";
+import { colors, productList, categories } from "./data/index";
 import { styles } from "./interfaces/interface";
 import ButtonComponent from "./ui/ButtonComponent";
 import MyModal from "./ui/DailogModle";
@@ -8,6 +8,7 @@ import Input from "./ui/Input";
 import { Validation } from "./Validation";
 import ErorrMessage from "./components/ErorrMessage";
 import CircleColor from "./components/CircleColor";
+import Example from "./ui/SelectMenue";
 
 const initialProductState = {
   imageURL: "",
@@ -27,11 +28,11 @@ const App = () => {
   // Modal visibility state
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [AddProduct, setAddProduct] = useState(productList);
+  const [selected, setSelected] = useState(categories[0]);
   // Product form state
   const [product, setProduct] = useState(initialProductState);
   //temp colors state
   const [tempColors, setTempColors] = useState([]);
-
   // Error messages for form fields
   const [errors, setErrors] = useState(initialErrorState);
   //maping colors
@@ -71,11 +72,12 @@ const App = () => {
     const hasErrors = Object.values(validationResult).some((msg) => msg !== "");
     if (!hasErrors) {
       // Here you would typically handle the form submission, e.g., send data to an API
+      setAddProduct((prev) => [{ ...product, colors: tempColors }, ...prev]); // Add new product to the list
+      setTempColors([]); // Reset temp colors
+      onCancel();
     }
-    setAddProduct((prev) => [{ ...product, colors: tempColors }, ...prev]); // Add new product to the list
-    setTempColors([]); // Reset temp colors
-    onCancel();
   };
+  console.log(tempColors);
   // Helper for input change
   const handleInputChange = (field) => (e) => {
     setProduct({ ...product, [field]: e.target.value });
@@ -160,7 +162,10 @@ const App = () => {
             />
             <ErorrMessage message={errors.price} />
           </div>
+          {/* category side  */}
+          <Example selected={selected} setSelcted={setSelected} />
           {/* circle side */}
+          <div className="flex items-center space-x-4 ">{MapColors}</div>
           <div className="grid grid-cols-4 gap-1">
             {tempColors.map((color, index) => (
               <span
@@ -172,7 +177,6 @@ const App = () => {
               </span>
             ))}
           </div>
-          <div className="flex items-center space-x-4 ">{MapColors}</div>
           {/* Modal Action Buttons */}
           <div className="mt-4 flex space-x-1">
             <ButtonComponent
