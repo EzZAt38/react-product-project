@@ -144,6 +144,18 @@ react-product-project/
 - **Color Selection:** Users can select colors for products (can be extended for categories or tags).
 - **Image URL Validation:** Ensures product images are valid URLs.
 - **Responsive Design:** Works well on mobile, tablet, and desktop screens.
+- **Category Selection:** Users can assign categories to products.
+- **Image Preview:** (Planned) Show a preview of the product image when a valid URL is entered.
+- **Pagination or Infinite Scroll:** (Planned) For large product lists, add pagination or infinite scrolling.
+- **Dark Mode:** (Planned) Add support for dark mode using Tailwind CSS or custom styles.
+- **Internationalization (i18n):** (Planned) Support multiple languages for a broader audience.
+- **User Authentication:** (Planned) Add login/logout and user-specific product management.
+- **Role-Based Access:** (Planned) Allow only certain users to edit or delete products.
+- **API Integration:** (Planned) Connect to a backend for CRUD operations.
+- **Notifications:** (Planned) Show toast or modal notifications for actions (add, edit, delete).
+- **Drag-and-Drop Reordering:** (Planned) Allow users to reorder products visually.
+- **Bulk Actions:** (Planned) Enable selecting and deleting/editing multiple products at once.
+- **Advanced Filtering/Sorting:** (Planned) Add UI for filtering and sorting products by various fields.
 
 ---
 
@@ -155,8 +167,13 @@ react-product-project/
    ```
 2. **Start the development server:**
    ```sh
-   npm start
+   npm run dev
    ```
+3. **start the devlopment server by yarn:**
+```sh
+yarn dev
+```  
+
 3. **View in browser:**  
    Open [http://localhost:3000](http://localhost:3000)
 
@@ -297,4 +314,5 @@ A: The app is built with modern standards and should work in all major browsers.
 - [Playwright](https://playwright.dev/)
 
 ---
+
 Feel free to expand this documentation as your project grows!
