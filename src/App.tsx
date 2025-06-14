@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, FormEvent } from "react";
 import ProductCard from "./components/ProductCard";
 import { colors, productList, categories } from "./data/index";
 import { Icard, productName, styles } from "./interfaces/interface";
@@ -34,9 +34,8 @@ const App = () => {
   const [product, setProduct] = useState(initialProductState);
   const [tempColors, setTempColors] = useState<string[]>([]);
   const [errors, setErrors] = useState<Icard>(initialErrorState);
-  const [editProduct, setEditProduct] = useState<Icard>(initialProductState);
-  console.log("Product List:", product);
-
+  const [productIndex, setProductIndex] = useState<number>(0);
+  const [editProduct, setEditProduct] = useState(initialProductState);
   // Color selection UI
   const MapColors = colors.map((item) => (
     <CircleColor
@@ -51,20 +50,25 @@ const App = () => {
       }}
     />
   ));
-const renderEditInputModal = (id:string,label:string,name:productName, placeholder:string) => {
-  return (
-     <div>
-            <Input
-              id={id}
-              label={label}
-              placeholder={placeholder}
-              value={editProduct[name]}
-              onChange={handleEditInputChange(name)}
-            />
-            <ErorrMessage message={errors[name]} />
-          </div>
-  )
-}
+  const renderEditInputModal = (
+    id: string,
+    label: string,
+    name: productName,
+    placeholder: string
+  ) => {
+    return (
+      <div>
+        <Input
+          id={id}
+          label={label}
+          placeholder={placeholder}
+          value={editProduct[name]}
+          onChange={handleEditInputChange(name)}
+        />
+        <ErorrMessage message={errors[name]} />
+      </div>
+    );
+  };
   // Modal handlers
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
@@ -76,9 +80,14 @@ const renderEditInputModal = (id:string,label:string,name:productName, placehold
     setTempColors([]);
     closeModal();
   };
-
+  const onEditCancel = () => {
+    setEditProduct(initialProductState);
+    setErrors(initialErrorState);
+    setTempColors([]);
+    setIsEdit(false);
+  };
   // Form submit handler for adding product
-  const handlerSubmit = (e) => {
+  const handlerSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const validationResult = Validation(product);
     setErrors(validationResult);
@@ -98,22 +107,25 @@ const renderEditInputModal = (id:string,label:string,name:productName, placehold
     }
   };
   // Form submit handler for editing product
-  const handlerEditSubmit = (e) => {
+  const handlerEditSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const validationResult = Validation(editProduct);
     setErrors(validationResult);
-
     // Check for errors
     const hasErrors = Object.values(validationResult).some((msg) => msg !== "");
-    if (tempColors.length === 0) {
-      setErrors((prev) => ({ ...prev, colors: "At least select one color" }));
-      return;
-    }
     if (!hasErrors) {
-      setEditProduct({ ...editProduct, color: tempColors, category: selected });
-      onCancel();
+      setEditProduct({ ...editProduct });
+        const UpdateProduct = [...addProduct];
+    UpdateProduct[productIndex] = {
+      ...editProduct,
+      colors: tempColors,
+      category: selected,
+    };
+    setAddProduct(UpdateProduct);
+    onEditCancel();
     }
   };
+  console.log("addProduct", addProduct);
   // Input change handler for adding product
   const handleInputChange = (field) => (e) => {
     setProduct({ ...product, [field]: e.target.value });
@@ -122,6 +134,7 @@ const renderEditInputModal = (id:string,label:string,name:productName, placehold
   // Input change handler for editing product
   const handleEditInputChange = (field) => (e) => {
     setEditProduct({ ...editProduct, [field]: e.target.value });
+
     setErrors({ ...errors, [field]: "" });
   };
   return (
@@ -142,6 +155,8 @@ const renderEditInputModal = (id:string,label:string,name:productName, placehold
             category={prod.category}
             setProduct={setEditProduct}
             isopen={() => setIsEdit(true)}
+            index={idx}
+            setisIndex={setProductIndex}
           >
             {/* You can add Edit/Destroy buttons here if needed */}
           </ProductCard>
@@ -238,13 +253,33 @@ const renderEditInputModal = (id:string,label:string,name:productName, placehold
           onSubmit={handlerEditSubmit}
         >
           {/* Product Name Input */}
-         {renderEditInputModal("product-name", "Product name:", "title", "Write your product name here")}
+          {renderEditInputModal(
+            "product-name",
+            "Product name:",
+            "title",
+            "Write your product name here"
+          )}
           {/* Product Image URL Input */}
-          {renderEditInputModal("product-image", "Product Image URL:", "imageURL", "Paste your product image URL here")}
+          {renderEditInputModal(
+            "product-image",
+            "Product Image URL:",
+            "imageURL",
+            "Paste your product image URL here"
+          )}
           {/* Description Input */}
-          {renderEditInputModal("description", "Description:", "description", "Write your description here")}
+          {renderEditInputModal(
+            "description",
+            "Description:",
+            "description",
+            "Write your description here"
+          )}
           {/* Price Input */}
-          {renderEditInputModal("price", "Price:", "price", "Write your price here")}
+          {renderEditInputModal(
+            "price",
+            "Price:",
+            "price",
+            "Write your price here"
+          )}
           {/* <div>
             <Input
               id="product-image"
@@ -299,13 +334,15 @@ const renderEditInputModal = (id:string,label:string,name:productName, placehold
               color={styles.submit}
               text="Submit"
               width="w-full"
+              type="submit"
+              // onClick={()=>{setIsEdit(false)}}
             />
             <ButtonComponent
               color={styles.delete}
               text="Delete"
               onClick={() => {
                 setIsEdit(false);
-                setProduct(initialProductState);
+                setEditProduct(initialProductState);
                 setErrors(initialErrorState);
                 setTempColors([]);
               }}

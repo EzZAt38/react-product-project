@@ -6,6 +6,8 @@ import CircleColor from "./CircleColor";
 interface Iprops extends Icard {
   setProduct: (value:Icard) => void; // Optional edit function
 isopen:()=> void; 
+index: number; // Index of the product in the list
+setisIndex: (value: number) => void; // Optional function to set the index of the product
 }
 const ProductCard = ({
   imageURL,
@@ -16,12 +18,15 @@ const ProductCard = ({
   color = [],
   category,
   setProduct,
-  isopen
+  isopen,
+  index,
+  setisIndex, // Default to a no-op function if not provided
 }: Iprops) => {
   const product = { imageURL, description, price, title, color, category };
   const onEdit = () => {
   setProduct(product);
-  isopen();
+  isopen()
+  setisIndex(index);
   };
   const [textState, setTextState] = useState(true);
   return (
