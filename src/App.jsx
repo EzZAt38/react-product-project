@@ -22,76 +22,98 @@ const initialErrorState = {
   title: "",
   description: "",
   price: "",
+  colors: "",
 };
 
 const App = () => {
-  // Modal visibility state
+  // State management
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
-  const [AddProduct, setAddProduct] = useState(productList);
+  const [addProduct, setAddProduct] = useState(productList);
   const [selected, setSelected] = useState(categories[0]);
-  // Product form state
   const [product, setProduct] = useState(initialProductState);
-  console.log(product);
-  //temp colors state
   const [tempColors, setTempColors] = useState([]);
-  // Error messages for form fields
   const [errors, setErrors] = useState(initialErrorState);
-  //maping colors
+  const [editProduct, setEditProduct] = useState(initialProductState);
+  console.log("Product List:", product);
+
+  // Color selection UI
   const MapColors = colors.map((item) => (
     <CircleColor
       key={item}
       color={item}
       onClick={() => {
-        if (tempColors.includes(item)) {
-          setTempColors((prev) => prev.filter((color) => color !== item));
-          return;
-        }
-        setTempColors((prev) => [...prev, item]);
+        setTempColors((prev) =>
+          prev.includes(item)
+            ? prev.filter((color) => color !== item)
+            : [...prev, item]
+        );
       }}
     />
   ));
-  // Open modal handler
-  const openModal = () => setIsModalOpen(true);
 
-  // Close modal handler
+  // Modal handlers
+  const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
 
   // Reset form and close modal
   const onCancel = () => {
     setProduct(initialProductState);
     setErrors(initialErrorState);
+    setTempColors([]);
     closeModal();
   };
 
-  // Form submit handler
+  // Form submit handler for adding product
   const handlerSubmit = (e) => {
     e.preventDefault();
     const validationResult = Validation(product);
     setErrors(validationResult);
 
-    // If all error fields are empty, close modal (form is valid)
+    // Check for errors
     const hasErrors = Object.values(validationResult).some((msg) => msg !== "");
+    if (tempColors.length === 0) {
+      setErrors((prev) => ({ ...prev, colors: "At least select one color" }));
+      return;
+    }
     if (!hasErrors) {
-      // Here you would typically handle the form submission, e.g., send data to an API
-      setAddProduct((prev) => [{ ...product, colors: tempColors }, ...prev]); // Add new product to the list
-      setTempColors([]); // Reset temp colors
+      setAddProduct((prev) => [
+        { ...product, colors: tempColors, category: selected },
+        ...prev,
+      ]);
       onCancel();
     }
   };
-  // Helper for input change
-  const handleInputChange = (field) => (e) => {
-    setProduct({ ...product, [field]: e.target.value });
-    const colorVaild = tempColors.length !== 0;
-    if (!colorVaild) {
-      setErrors({
-        ...errors,
-        [field]: "",
-        colors: "at least select one color",
-      }); // Clear error on change
+  // Form submit handler for editing product
+  const handlerEditSubmit = (e) => {
+    e.preventDefault();
+    const validationResult = Validation(product);
+    setErrors(validationResult);
+
+    // Check for errors
+    const hasErrors = Object.values(validationResult).some((msg) => msg !== "");
+    if (tempColors.length === 0) {
+      setErrors((prev) => ({ ...prev, colors: "At least select one color" }));
+      return;
+    }
+    if (!hasErrors) {
+      setAddProduct((prev) => [
+        { ...product, colors: tempColors, category: selected },
+        ...prev,
+      ]);
+      onCancel();
     }
   };
-
+  // Input change handler for adding product
+  const handleInputChange = (field) => (e) => {
+    setProduct({ ...product, [field]: e.target.value });
+    setErrors({ ...errors, [field]: "" });
+  };
+  // Input change handler for editing product
+  const handleEditInputChange = (field) => (e) => {
+    setEditProduct({ ...editProduct, [field]: e.target.value });
+    setErrors({ ...errors, [field]: "" });
+  };
   return (
     <main className="container mx-auto pt-2">
       {/* Add Product Button */}
@@ -99,7 +121,7 @@ const App = () => {
 
       {/* Product List */}
       <div className={styles.responsiveScreen}>
-        {AddProduct.map((prod, idx) => (
+        {addProduct.map((prod, idx) => (
           <ProductCard
             key={idx}
             title={prod.title}
@@ -108,10 +130,10 @@ const App = () => {
             imageURL={prod.imageURL}
             color={prod.colors}
             category={prod.category}
-            setProduct={setProduct}
-            isopen={()=> setIsEdit(true)}
+            setProduct={setEditProduct}
+            isopen={() => setIsEdit(true)}
           >
-            {/* Edit and Destroy Buttons for each product */}
+            {/* You can add Edit/Destroy buttons here if needed */}
           </ProductCard>
         ))}
       </div>
@@ -163,16 +185,16 @@ const App = () => {
             />
             <ErorrMessage message={errors.price} />
           </div>
-          {/* category side  */}
+          {/* Category Selector */}
           <Example selected={selected} setSelcted={setSelected} />
-          {/* circle side */}
+          {/* Color Selection */}
           <ErorrMessage message={errors.colors} />
-          <div className="flex items-center space-x-4 ">{MapColors}</div>
+          <div className="flex items-center space-x-4">{MapColors}</div>
           <div className="grid grid-cols-4 gap-1">
             {tempColors.map((color, index) => (
               <span
                 key={index}
-                className={`p-1 text-center text-white rounded-md`}
+                className="p-1 text-center text-white rounded-md"
                 style={{ backgroundColor: color }}
               >
                 {color}
@@ -194,26 +216,40 @@ const App = () => {
           </div>
         </form>
       </MyModal>
+
       {/* Modal for Editing Product */}
       <MyModal
         isOpen={isEdit}
         closeModal={() => setIsEdit(false)}
         title="Edit Product"
       >
-        <form className="mt-2 flex flex-col space-y-4" onSubmit={handlerSubmit}>
+        <form
+          className="mt-2 flex flex-col space-y-4"
+          onSubmit={handlerEditSubmit}
+        >
           {/* Product Name Input */}
           <div>
             <Input
               id="product-name"
               label="Product name:"
               placeholder="Write your product name here"
-              value={product.title}
-              onChange={handleInputChange("title")}
+              value={editProduct.title}
+              onChange={handleEditInputChange("title")}
             />
-            <ErorrMessage message={errors.title} />
+            <ErorrMessage message={""} />
+          </div>
+          <div>
+            <Input
+              id="product-description"
+              label="Product description:"
+              placeholder="Write your product description here"
+              value={editProduct.description}
+              onChange={handleEditInputChange("description")}
+            />
+            <ErorrMessage message={""} />
           </div>
           {/* Product Image URL Input */}
-          <div>
+          {/* <div>
             <Input
               id="product-image"
               label="Product Image URL:"
@@ -222,9 +258,9 @@ const App = () => {
               onChange={handleInputChange("imageURL")}
             />
             <ErorrMessage message={errors.imageURL} />
-          </div>
+          </div> */}
           {/* Description Input */}
-          <div>
+          {/* <div>
             <Input
               id="description"
               label="Description:"
@@ -233,9 +269,9 @@ const App = () => {
               onChange={handleInputChange("description")}
             />
             <ErorrMessage message={errors.description} />
-          </div>
+          </div> */}
           {/* Price Input */}
-          <div>
+          {/* <div>
             <Input
               id="price"
               label="Price:"
@@ -244,23 +280,23 @@ const App = () => {
               onChange={handleInputChange("price")}
             />
             <ErorrMessage message={errors.price} />
-          </div>
-          {/* category side  */}
-          <Example selected={selected} setSelcted={setSelected} />
-          {/* circle side */}
-          <ErorrMessage message={errors.colors} />
-          <div className="flex items-center space-x-4 ">{MapColors}</div>
-          <div className="grid grid-cols-4 gap-1">
-            {tempColors.map((color, index) => (
-              <span
-                key={index}
-                className={`p-1 text-center text-white rounded-md`}
-                style={{ backgroundColor: color }}
-              >
-                {color}
-              </span>
-            ))}
-          </div>
+          </div> */}
+          {/* Category Selector */}
+          {/* <Example selected={selected} setSelcted={setSelected} /> */}
+          {/* Color Selection */}
+          {/* <ErorrMessage message={errors.colors} /> */}
+          {/* <div className="flex items-center space-x-4 ">{MapColors}</div> */}
+          {/* <div className="grid grid-cols-4 gap-1"> */}
+          {tempColors.map((color, index) => (
+            <span
+              key={index}
+              className="p-1 text-center text-white rounded-md"
+              style={{ backgroundColor: color }}
+            >
+              {color}
+            </span>
+          ))}
+          {/* </div> */}
           {/* Modal Action Buttons */}
           <div className="mt-4 flex space-x-1">
             <ButtonComponent
@@ -271,7 +307,12 @@ const App = () => {
             <ButtonComponent
               color={styles.delete}
               text="Delete"
-              onClick={onCancel}
+              onClick={() => {
+                setIsEdit(false);
+                setProduct(initialProductState);
+                setErrors(initialErrorState);
+                setTempColors([]);
+              }}
             />
           </div>
         </form>
