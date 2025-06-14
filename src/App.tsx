@@ -1,7 +1,7 @@
 import { useState } from "react";
 import ProductCard from "./components/ProductCard";
 import { colors, productList, categories } from "./data/index";
-import { styles } from "./interfaces/interface";
+import { Icard, productName, styles } from "./interfaces/interface";
 import ButtonComponent from "./ui/ButtonComponent";
 import MyModal from "./ui/DailogModle";
 import Input from "./ui/Input";
@@ -32,9 +32,9 @@ const App = () => {
   const [addProduct, setAddProduct] = useState(productList);
   const [selected, setSelected] = useState(categories[0]);
   const [product, setProduct] = useState(initialProductState);
-  const [tempColors, setTempColors] = useState([]);
-  const [errors, setErrors] = useState(initialErrorState);
-  const [editProduct, setEditProduct] = useState(initialProductState);
+  const [tempColors, setTempColors] = useState<string[]>([]);
+  const [errors, setErrors] = useState<Icard>(initialErrorState);
+  const [editProduct, setEditProduct] = useState<Icard>(initialProductState);
   console.log("Product List:", product);
 
   // Color selection UI
@@ -43,7 +43,7 @@ const App = () => {
       key={item}
       color={item}
       onClick={() => {
-        setTempColors((prev) =>
+        setTempColors((prev: string[]) =>
           prev.includes(item)
             ? prev.filter((color) => color !== item)
             : [...prev, item]
@@ -51,7 +51,20 @@ const App = () => {
       }}
     />
   ));
-
+const renderEditInputModal = (id:string,label:string,name:productName, placeholder:string) => {
+  return (
+     <div>
+            <Input
+              id={id}
+              label={label}
+              placeholder={placeholder}
+              value={editProduct[name]}
+              onChange={handleEditInputChange(name)}
+            />
+            <ErorrMessage message={errors[name]} />
+          </div>
+  )
+}
   // Modal handlers
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
@@ -87,7 +100,7 @@ const App = () => {
   // Form submit handler for editing product
   const handlerEditSubmit = (e) => {
     e.preventDefault();
-    const validationResult = Validation(product);
+    const validationResult = Validation(editProduct);
     setErrors(validationResult);
 
     // Check for errors
@@ -97,10 +110,7 @@ const App = () => {
       return;
     }
     if (!hasErrors) {
-      setAddProduct((prev) => [
-        { ...product, colors: tempColors, category: selected },
-        ...prev,
-      ]);
+      setEditProduct({ ...editProduct, color: tempColors, category: selected });
       onCancel();
     }
   };
@@ -228,27 +238,13 @@ const App = () => {
           onSubmit={handlerEditSubmit}
         >
           {/* Product Name Input */}
-          <div>
-            <Input
-              id="product-name"
-              label="Product name:"
-              placeholder="Write your product name here"
-              value={editProduct.title}
-              onChange={handleEditInputChange("title")}
-            />
-            <ErorrMessage message={""} />
-          </div>
-          <div>
-            <Input
-              id="product-description"
-              label="Product description:"
-              placeholder="Write your product description here"
-              value={editProduct.description}
-              onChange={handleEditInputChange("description")}
-            />
-            <ErorrMessage message={""} />
-          </div>
+         {renderEditInputModal("product-name", "Product name:", "title", "Write your product name here")}
           {/* Product Image URL Input */}
+          {renderEditInputModal("product-image", "Product Image URL:", "imageURL", "Paste your product image URL here")}
+          {/* Description Input */}
+          {renderEditInputModal("description", "Description:", "description", "Write your description here")}
+          {/* Price Input */}
+          {renderEditInputModal("price", "Price:", "price", "Write your price here")}
           {/* <div>
             <Input
               id="product-image"

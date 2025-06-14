@@ -15,6 +15,7 @@ export interface IBtn extends ButtonHTMLAttributes<HTMLButtonElement> {
  * Product card props interface.
  * Represents the shape of a product object and its children (usually action buttons).
  */
+export type productName = "title" | "description" | "price" | "imageURL";
 export interface Icard {
   imageURL: string; // URL for the product image
   title: string; // Name/title of the product
