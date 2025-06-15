@@ -1,7 +1,8 @@
-import { Dialog, Transition } from "@headlessui/react";
+import { Dialog, Transition,DialogBackdrop } from "@headlessui/react";
 import { Fragment} from "react";
 import {  MyModalProps } from "../interfaces/interface";
 import Input from "./Input";
+
 
 export default function MyModal({
   isOpen,
@@ -12,6 +13,8 @@ export default function MyModal({
   return (
     <Transition appear show={isOpen} as={Fragment}>
       <Dialog as="div" className="relative z-10" onClose={closeModal}>
+        {/* The backdrop, rendered as a fixed sibling to the panel container */}
+        <DialogBackdrop className="backdrop-blur-sm fixed inset-0" />
         {/* Overlay */}
         <Transition.Child
           as={Fragment}

@@ -9,7 +9,7 @@ import { Validation } from "./Validation";
 import ErorrMessage from "./components/ErorrMessage";
 import CircleColor from "./components/CircleColor";
 import Example from "./ui/SelectMenue";
-
+import toast,{Toaster} from "react-hot-toast";
 const initialProductState = {
   imageURL: "",
   title: "",
@@ -35,7 +35,9 @@ const App = () => {
   const [tempColors, setTempColors] = useState<string[]>([]);
   const [errors, setErrors] = useState<Icard>(initialErrorState);
   const [productIndex, setProductIndex] = useState<number>(0);
-  const [editProduct, setEditProduct] = useState(initialProductState);
+  const [editProduct, setEditProduct] = useState<Icard>(initialProductState);
+  const [EditColors, setEditColors] = useState<string[]>([]);
+  const [deleteProduct, setDeleteProduct] = useState(false);
   // Color selection UI
   const MapColors = colors.map((item) => (
     <CircleColor
@@ -43,6 +45,19 @@ const App = () => {
       color={item}
       onClick={() => {
         setTempColors((prev: string[]) =>
+          prev.includes(item)
+            ? prev.filter((color) => color !== item)
+            : [...prev, item]
+        );
+      }}
+    />
+  ));
+  const MapEsitColors = colors.map((item) => (
+    <CircleColor
+      key={item}
+      color={item}
+      onClick={() => {
+        setEditColors((prev: string[]) =>
           prev.includes(item)
             ? prev.filter((color) => color !== item)
             : [...prev, item]
@@ -104,6 +119,7 @@ const App = () => {
         ...prev,
       ]);
       onCancel();
+      toast.success("Product added successfully!");
     }
   };
   // Form submit handler for editing product
@@ -115,14 +131,15 @@ const App = () => {
     const hasErrors = Object.values(validationResult).some((msg) => msg !== "");
     if (!hasErrors) {
       setEditProduct({ ...editProduct });
-        const UpdateProduct = [...addProduct];
-    UpdateProduct[productIndex] = {
-      ...editProduct,
-      colors: tempColors,
-      category: selected,
-    };
-    setAddProduct(UpdateProduct);
-    onEditCancel();
+      const UpdateProduct = [...addProduct];
+      UpdateProduct[productIndex] = {
+        ...editProduct,
+        colors: EditColors,
+        category: editProduct.category || selected,
+      };
+      setAddProduct(UpdateProduct);
+      onEditCancel();
+      toast.success("Product updated successfully!");
     }
   };
   console.log("addProduct", addProduct);
@@ -137,6 +154,14 @@ const App = () => {
 
     setErrors({ ...errors, [field]: "" });
   };
+  const removeHandlers = () => {
+    const filteredProducts = addProduct.filter(
+      (_, index) => index !== productIndex
+    );
+    setAddProduct(filteredProducts);
+    setDeleteProduct(false);
+    toast.success("Product deleted successfully!");
+  }
   return (
     <main className="container mx-auto pt-2">
       {/* Add Product Button */}
@@ -157,6 +182,8 @@ const App = () => {
             isopen={() => setIsEdit(true)}
             index={idx}
             setisIndex={setProductIndex}
+            setisColor={setEditColors}
+            onDestroy={()=>{setDeleteProduct(true)}}
           >
             {/* You can add Edit/Destroy buttons here if needed */}
           </ProductCard>
@@ -213,7 +240,6 @@ const App = () => {
           {/* Category Selector */}
           <Example selected={selected} setSelcted={setSelected} />
           {/* Color Selection */}
-          <ErorrMessage message={errors.colors} />
           <div className="flex items-center space-x-4">{MapColors}</div>
           <div className="grid grid-cols-4 gap-1">
             {tempColors.map((color, index) => (
@@ -280,54 +306,26 @@ const App = () => {
             "price",
             "Write your price here"
           )}
-          {/* <div>
-            <Input
-              id="product-image"
-              label="Product Image URL:"
-              placeholder="Paste your product image URL here"
-              value={product.imageURL}
-              onChange={handleInputChange("imageURL")}
-            />
-            <ErorrMessage message={errors.imageURL} />
-          </div> */}
-          {/* Description Input */}
-          {/* <div>
-            <Input
-              id="description"
-              label="Description:"
-              placeholder="Write your description here"
-              value={product.description}
-              onChange={handleInputChange("description")}
-            />
-            <ErorrMessage message={errors.description} />
-          </div> */}
-          {/* Price Input */}
-          {/* <div>
-            <Input
-              id="price"
-              label="Price:"
-              placeholder="Write your price here"
-              value={product.price}
-              onChange={handleInputChange("price")}
-            />
-            <ErorrMessage message={errors.price} />
-          </div> */}
           {/* Category Selector */}
-          {/* <Example selected={selected} setSelcted={setSelected} /> */}
+          <Example
+            selected={editProduct.category ?? categories[0]}
+            setSelcted={(value) =>
+              setEditProduct({ ...editProduct, category: value })
+            }
+          />
           {/* Color Selection */}
-          {/* <ErorrMessage message={errors.colors} /> */}
-          {/* <div className="flex items-center space-x-4 ">{MapColors}</div> */}
-          {/* <div className="grid grid-cols-4 gap-1"> */}
-          {tempColors.map((color, index) => (
-            <span
-              key={index}
-              className="p-1 text-center text-white rounded-md"
-              style={{ backgroundColor: color }}
-            >
-              {color}
-            </span>
-          ))}
-          {/* </div> */}
+          <div className="flex items-center space-x-4 ">{MapEsitColors}</div>
+          <div className="grid grid-cols-4 gap-1">
+            {EditColors.map((color, index) => (
+              <span
+                key={index}
+                className="p-1 text-center text-white rounded-md"
+                style={{ backgroundColor: color }}
+              >
+                {color}
+              </span>
+            ))}
+          </div>
           {/* Modal Action Buttons */}
           <div className="mt-4 flex space-x-1">
             <ButtonComponent
@@ -347,9 +345,36 @@ const App = () => {
                 setTempColors([]);
               }}
             />
+            
           </div>
         </form>
       </MyModal>
+      <MyModal isOpen={deleteProduct} title="" closeModal={() => setDeleteProduct(false)}>
+              <div>
+                <h1 className="text-xl font-bold mb-4">
+                  Are you sure you want to remove this product from store?
+                </h1>
+                <p>
+                  Deleting this product will remove it from the store
+                  permanently. Any associated data, history,and other related
+                  information will also be lost. Please make sure this the
+                  intended action.
+                </p>
+                <div className="mt-4 flex space-x-2">
+                  <ButtonComponent
+                    color={styles.delete}
+                    text="Yes, Delete"
+                    onClick={removeHandlers}
+                  />
+                  <ButtonComponent
+                    color={ "bg-gray-400 shadow-gray-500 hover:bg-gray-600"}
+                    text="Cancel"
+                    onClick={() => setDeleteProduct(false)}
+                  />
+                  </div>
+              </div>
+            </MyModal>
+<Toaster/>
     </main>
   );
 };

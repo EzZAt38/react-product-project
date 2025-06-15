@@ -37,7 +37,7 @@ export interface ICatgory {
  */
 export const styles = {
   submit: "bg-indigo-700 shadow-indigo-400 hover:bg-indigo-900", // Submit button style
-  delete: "bg-red-700 shadow-red-400 hover:bg-red-900", // Delete button style
+  delete: "bg-[#c2344d] shadow-red-400 hover:bg-red-900", // Delete button style
   icardparents: "border rounded-md p-2 flex flex-col justify-between", // Card container style
   responsiveScreen:
     "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 p-3 ", // Responsive grid

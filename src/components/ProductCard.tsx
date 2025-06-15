@@ -1,32 +1,40 @@
-import React, { useState } from "react";
+import{ useState } from "react";
 import ButtonComponent from "../ui/ButtonComponent";
 import { Icard, styles, textLenther } from "../interfaces/interface";
 import Image from "./Image";
 import CircleColor from "./CircleColor";
 interface Iprops extends Icard {
-  setProduct: (value:Icard) => void; // Optional edit function
-isopen:()=> void; 
-index: number; // Index of the product in the list
-setisIndex: (value: number) => void; // Optional function to set the index of the product
+  setProduct: (value: Icard) => void; // Optional edit function
+  isopen: () => void;
+  index: number; // Index of the product in the list
+  setisIndex: (value: number) => void; // Optional function to set the index of the product
+  setisColor: (value: string[]) => void; // Optional function to set the color
+  onDestroy: () => void; // Optional destroy function
 }
 const ProductCard = ({
   imageURL,
   description,
   price,
   title,
-  children,
   color = [],
   category,
   setProduct,
   isopen,
   index,
   setisIndex, // Default to a no-op function if not provided
+  setisColor = () => {}, // Default to a no-op function if not provided
+  onDestroy = () => {}, // Default to a no-op function if not provided
 }: Iprops) => {
   const product = { imageURL, description, price, title, color, category };
   const onEdit = () => {
-  setProduct(product);
-  isopen()
-  setisIndex(index);
+    isopen();
+    setProduct(product);
+    setisIndex(index);
+    setisColor(color);
+  };
+  const onDestroyHandler = () => {
+    setProduct(product);
+    onDestroy();
   };
   const [textState, setTextState] = useState(true);
   return (
@@ -73,12 +81,12 @@ const ProductCard = ({
       {/* price and category side */}
       {/* this is the footer side */}
       <div className="footer flex  space-x-2 p-1">
-                   <ButtonComponent
-                      color={styles.submit}
-                      text="Edit"
-                      onClick={onEdit}
-                    />
-                    <ButtonComponent color={styles.delete} text="Destroy" />
+        <ButtonComponent color={styles.submit} text="Edit" onClick={onEdit} />
+        <ButtonComponent
+          color={styles.delete}
+          text="Destroy"
+          onClick={onDestroyHandler}
+        />
       </div>
     </div>
   );
